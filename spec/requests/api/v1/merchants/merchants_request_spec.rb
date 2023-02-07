@@ -12,14 +12,12 @@ RSpec.describe 'Merchants API' do
 
     expect(merchants.count).to eq(3)
 
-    require 'pry', binding.pry
-
     merchants.each do |merchant|
       expect(merchant).to have_key(:id)
       expect(merchant[:id]).to be_a(String)
 
       expect(merchant).to have_key(:type)
-      expect(merchant[:type]).to be_a(String)
+      expect(merchant[:type]).to eq("merchant")
 
       expect(merchant).to have_key(:attributes)
       expect(merchant[:attributes]).to be_a(Hash)
@@ -44,7 +42,7 @@ RSpec.describe 'Merchants API' do
     expect(merchant[:id]).to eq(merchant_id.to_s)
 
     expect(merchant).to have_key(:type)
-    expect(merchant[:type]).to be_a(String)
+    expect(merchant[:type]).to eq("merchant")
 
     expect(merchant).to have_key(:attributes)
     expect(merchant[:attributes]).to be_a(Hash)
@@ -70,7 +68,7 @@ RSpec.describe 'Merchants API' do
       expect(item[:id]).to_not eq(other_merchant_item.id.to_s)
 
       expect(item).to have_key(:type)
-      expect(item[:type]).to be_a(String)
+      expect(item[:type]).to eq("item")
 
       expect(item).to have_key(:attributes)
       expect(item[:attributes]).to be_a(Hash)
