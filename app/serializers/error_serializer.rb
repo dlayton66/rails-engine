@@ -1,12 +1,20 @@
 class ErrorSerializer
   def initialize(exception)
-    @record = exception.record
+    @errors = get_errors_array(exception)
   end
 
   def serialize
     {
       "message": "Your query could not be completed",
-      "errors": @record.errors.full_messages
+      "errors": @errors
     }
+  end
+
+  def get_errors_array(exception)
+    if defined?(exception.record)
+      exception.record.errors.full_messages
+    else
+      [exception.message]
+    end
   end
 end
