@@ -10,11 +10,17 @@ RSpec.describe 'get merchant items' do
 
     expect(response).to be_successful
 
-    items = JSON.parse(response.body, symbolize_names: true)[:data]
+    json_response = JSON.parse(response.body, symbolize_names: true)
 
-    items.each do |item|
+    expect(json_response).to have_key(:data)
+    expect(json_response[:data]).to be_an(Array)
+
+    items = json_response[:data]
+
+    items.each.with_index do |item, i|
       expect(item).to have_key(:id)
       expect(item[:id]).to be_a(String)
+      expect(item[:id]).to eq(merchant_items[i].id.to_s)
       expect(item[:id]).to_not eq(other_merchant_item_id.to_s)
 
       expect(item).to have_key(:type)
@@ -25,12 +31,15 @@ RSpec.describe 'get merchant items' do
 
       expect(item[:attributes]).to have_key(:name)
       expect(item[:attributes][:name]).to be_a(String)
+      expect(item[:attributes][:name]).to eq(merchant_items[i].name)
 
       expect(item[:attributes]).to have_key(:description)
       expect(item[:attributes][:description]).to be_a(String)
+      expect(item[:attributes][:description]).to eq(merchant_items[i].description)
 
       expect(item[:attributes]).to have_key(:unit_price)
       expect(item[:attributes][:unit_price]).to be_a(Float)
+      expect(item[:attributes][:unit_price]).to eq(merchant_items[i].unit_price)
 
       expect(item[:attributes]).to have_key(:merchant_id)
       expect(item[:attributes][:merchant_id]).to be_an(Integer)
