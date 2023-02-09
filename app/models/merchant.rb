@@ -17,10 +17,6 @@ class Merchant < ApplicationRecord
     where("name ILIKE ?", "%#{name}%")
   end
 
-  def self.passed_params(params)
-    params.except("controller", "action")
-  end
-
   def self.check_params(params)
     if params.empty?
       raise MissingParamsError
