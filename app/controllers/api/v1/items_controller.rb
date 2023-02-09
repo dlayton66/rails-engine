@@ -1,4 +1,4 @@
-class Api::V1::ItemsController < ApplicationController
+class Api::V1::ItemsController < BaseController
   before_action :get_item, only: %i[show destroy update]
   
   def index

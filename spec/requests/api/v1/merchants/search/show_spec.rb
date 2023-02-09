@@ -33,30 +33,97 @@ RSpec.describe 'find merchant' do
     expect(merchant[:attributes][:name]).to eq("AAA Mart")
   end
 
-  it 'returns error if no match' do
-    create_list(:merchant, 3)
+  
+  describe 'errors' do
+    it 'returns error if no match' do
+      create_list(:merchant, 3)
+  
+      get '/api/v1/merchants/find?name=THERESNOWAYTHISISINFAKER'
+  
+      expect(response.status).to eq(400)
+  
+      json_response = JSON.parse(response.body, symbolize_names: true)
+  
+      expect(json_response).to have_key(:data)
+      expect(json_response[:data]).to be_a(Hash)
+  
+      merchant = json_response[:data]
+  
+      expect(merchant).to be_a(Hash)
+  
+      expect(merchant).to have_key(:id)
+      expect(merchant[:id]).to be(nil)
+  
+      expect(merchant).to have_key(:type)
+      expect(merchant[:type]).to eq("merchant")
+  
+      expect(merchant).to have_key(:attributes)
+      expect(merchant[:attributes]).to be_a(Hash)
+      expect(merchant[:attributes]).to be_empty
+    end
+    
+    it 'returns error if parameters are missing' do
+      get '/api/v1/merchants/find'
+  
+      expect(response.status).to eq(400)
+  
+      error_response = JSON.parse(response.body, symbolize_names: true)
+  
+      expect(error_response).to have_key(:message)
+      expect(error_response[:message]).to eq("Your query could not be completed")
+  
+      expect(error_response).to have_key(:errors)
+      expect(error_response[:errors]).to be_a(Array)
+  
+      expect(error_response[:errors][0]).to eq("Parameters cannot be missing")
+    end
 
-    get '/api/v1/merchants/find?name=THERESNOWAYTHISISINFAKER'
+    it 'returns error if parameters are empty' do
+      get '/api/v1/merchants/find?name='
+  
+      expect(response.status).to eq(400)
+  
+      error_response = JSON.parse(response.body, symbolize_names: true)
+  
+      expect(error_response).to have_key(:message)
+      expect(error_response[:message]).to eq("Your query could not be completed")
+  
+      expect(error_response).to have_key(:errors)
+      expect(error_response[:errors]).to be_a(Array)
+  
+      expect(error_response[:errors][0]).to eq("Parameters cannot be empty")
+    end
 
-    expect(response.status).to eq(400)
+    it 'returns error if parameter other than name is passed' do
+      get '/api/v1/merchants/find?min_price=50'
+  
+      expect(response.status).to eq(400)
+  
+      error_response = JSON.parse(response.body, symbolize_names: true)
+  
+      expect(error_response).to have_key(:message)
+      expect(error_response[:message]).to eq("Your query could not be completed")
+  
+      expect(error_response).to have_key(:errors)
+      expect(error_response[:errors]).to be_a(Array)
+  
+      expect(error_response[:errors][0]).to eq("Can only pass name as a parameter")
+    end
 
-    json_response = JSON.parse(response.body, symbolize_names: true)
-
-    expect(json_response).to have_key(:data)
-    expect(json_response[:data]).to be_a(Hash)
-
-    merchant = json_response[:data]
-
-    expect(merchant).to be_a(Hash)
-
-    expect(merchant).to have_key(:id)
-    expect(merchant[:id]).to be(nil)
-
-    expect(merchant).to have_key(:type)
-    expect(merchant[:type]).to eq("merchant")
-
-    expect(merchant).to have_key(:attributes)
-    expect(merchant[:attributes]).to be_a(Hash)
-    expect(merchant[:attributes]).to be_empty
+    it 'returns error if another parameter is passed along with name' do
+      get '/api/v1/merchants/find?name=Mart&min_price=50'
+  
+      expect(response.status).to eq(400)
+  
+      error_response = JSON.parse(response.body, symbolize_names: true)
+  
+      expect(error_response).to have_key(:message)
+      expect(error_response[:message]).to eq("Your query could not be completed")
+  
+      expect(error_response).to have_key(:errors)
+      expect(error_response[:errors]).to be_a(Array)
+  
+      expect(error_response[:errors][0]).to eq("Can only pass name as a parameter")
+    end
   end
 end

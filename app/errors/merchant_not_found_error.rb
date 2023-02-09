@@ -1,0 +1,2 @@
+class MerchantNotFoundError < StandardError
+end
