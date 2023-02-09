@@ -1,12 +1,22 @@
 class ErrorSerializer
-  def initialize(exception)
-    @errors = get_errors_array(exception)
+  def initialize(exception = nil)
+    @exception = exception
   end
 
   def serialize
     {
       "message": "Your query could not be completed",
-      "errors": @errors
+      "errors": get_errors_array(@exception)
+    }
+  end
+
+  def merchant_serialize
+    {
+      "data": {
+          "id": nil,
+          "type": "merchant",
+          "attributes": {}
+      }
     }
   end
 
