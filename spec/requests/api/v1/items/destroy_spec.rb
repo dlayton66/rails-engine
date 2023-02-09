@@ -14,7 +14,7 @@ RSpec.describe 'destroy an item' do
     expect{Item.find(item_id)}.to raise_error(ActiveRecord::RecordNotFound)
   end
 
-  it 'returns a JSON error if record not found' do
+  it 'returns error if record not found' do
     delete "/api/v1/items/-1"
 
     error_response = JSON.parse(response.body, symbolize_names: true)
