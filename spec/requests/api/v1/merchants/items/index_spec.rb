@@ -4,7 +4,7 @@ RSpec.describe 'get merchant items' do
   it 'can get all items from a merchant by id' do
     merchant_id = create(:merchant).id
     merchant_items = create_list(:item, 3, merchant_id: merchant_id)
-    other_merchant_item = create(:item)
+    other_merchant_item_id = create(:item).id
 
     get "/api/v1/merchants/#{merchant_id}/items"
 
@@ -15,7 +15,7 @@ RSpec.describe 'get merchant items' do
     items.each do |item|
       expect(item).to have_key(:id)
       expect(item[:id]).to be_a(String)
-      expect(item[:id]).to_not eq(other_merchant_item.id.to_s)
+      expect(item[:id]).to_not eq(other_merchant_item_id.to_s)
 
       expect(item).to have_key(:type)
       expect(item[:type]).to eq("item")
@@ -36,5 +36,21 @@ RSpec.describe 'get merchant items' do
       expect(item[:attributes][:merchant_id]).to be_an(Integer)
       expect(item[:attributes][:merchant_id]).to eq(merchant_id)
     end
+  end
+
+  it 'returns error if merchant not found' do
+    get "/api/v1/merchants/-1/items"
+
+    error_response = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response.status).to eq(404)
+
+    expect(error_response).to have_key(:message)
+    expect(error_response[:message]).to eq("Your query could not be completed")
+
+    expect(error_response).to have_key(:errors)
+    expect(error_response[:errors]).to be_a(Array)
+
+    expect(error_response[:errors][0]).to eq("Couldn't find Merchant with 'id'=-1")
   end
 end
