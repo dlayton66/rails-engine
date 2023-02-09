@@ -2,7 +2,10 @@ class Api::V1::ItemsController < ApplicationController
   before_action :get_item, only: %i[show destroy update]
   
   def index
-    render json: ItemSerializer.new(Item.all)
+    page = params.fetch(:page, 1)
+    per_page = params.fetch(:per_page, 20)
+    items = Item.offset((page-1)*per_page).limit(per_page)
+    render json: ItemSerializer.new(items)
   end
 
   def show

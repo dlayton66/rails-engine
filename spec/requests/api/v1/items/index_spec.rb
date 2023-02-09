@@ -62,4 +62,36 @@ RSpec.describe 'get all items' do
     expect(json_response).to have_key(:data)
     expect(json_response[:data]).to be_an(Array)
   end
+
+  describe 'pagination' do
+    let!(:database_items) { create_list(:item, 100) }
+
+    it 'returns 20 items per page by default' do
+      get '/api/v1/items'
+
+      expect(response).to be_successful
+
+      json_response = JSON.parse(response.body, symbolize_names: true)
+      items = json_response[:data]
+
+      expect(items.count).to eq(20)
+    end
+
+    it 'returns the first page by default' do
+      get '/api/v1/items'
+
+      expect(response).to be_successful
+
+      json_response = JSON.parse(response.body, symbolize_names: true)
+      items = json_response[:data]
+
+      items.each.with_index do |item, i|
+        expect(item[:id]).to eq(database_items[i].id.to_s)
+        expect(item[:attributes][:name]).to eq(database_items[i].name)
+        expect(item[:attributes][:description]).to eq(database_items[i].description)
+        expect(item[:attributes][:unit_price]).to eq(database_items[i].unit_price)
+        expect(item[:attributes][:merchant_id]).to eq(database_items[i].merchant_id)
+      end
+    end
+  end
 end
