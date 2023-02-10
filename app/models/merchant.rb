@@ -28,6 +28,10 @@ class Merchant < ApplicationRecord
   end
 
   def self.other_params?(params)
-    params.keys.count > 1 || !params.has_key?(:name)
+    (params.keys - supported_params).any?
+  end
+
+  def self.supported_params
+    ["name"]
   end
 end

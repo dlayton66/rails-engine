@@ -20,6 +20,16 @@ class ErrorSerializer
     }
   end
 
+  def item_serialize
+    {
+      "data": {
+          "id": nil,
+          "type": "item",
+          "attributes": {}
+      }
+    }
+  end
+
   def get_errors_array(exception)
     if defined?(exception.record)
       exception.record.errors.full_messages

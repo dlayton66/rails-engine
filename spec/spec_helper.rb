@@ -16,6 +16,15 @@
 require 'simplecov'
 SimpleCov.start
 RSpec.configure do |config|
+  config.before(:suite) do 
+    Transaction.destroy_all
+    InvoiceItem.destroy_all
+    Item.destroy_all
+    Invoice.destroy_all
+    Customer.destroy_all
+    Merchant.destroy_all
+  end
+
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.

@@ -94,7 +94,7 @@ RSpec.describe 'find merchant' do
       expect(error_response[:errors][0]).to eq("Parameters cannot be empty")
     end
 
-    it 'returns error if parameter other than name is passed' do
+    it 'returns error if only unsupported parameter is passed' do
       get '/api/v1/merchants/find?min_price=50'
   
       expect(response.status).to eq(400)
@@ -107,10 +107,10 @@ RSpec.describe 'find merchant' do
       expect(error_response).to have_key(:errors)
       expect(error_response[:errors]).to be_a(Array)
   
-      expect(error_response[:errors][0]).to eq("Can only pass name as a parameter")
+      expect(error_response[:errors][0]).to eq("Invalid parameter passed. Valid parameters: name")
     end
 
-    it 'returns error if another parameter is passed along with name' do
+    it 'returns error if any unsupported parameter is passed' do
       get '/api/v1/merchants/find?name=Mart&min_price=50'
   
       expect(response.status).to eq(400)
@@ -123,7 +123,7 @@ RSpec.describe 'find merchant' do
       expect(error_response).to have_key(:errors)
       expect(error_response[:errors]).to be_a(Array)
   
-      expect(error_response[:errors][0]).to eq("Can only pass name as a parameter")
+      expect(error_response[:errors][0]).to eq("Invalid parameter passed. Valid parameters: name")
     end
   end
 end

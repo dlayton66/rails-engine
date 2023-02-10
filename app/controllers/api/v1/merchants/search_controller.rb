@@ -8,6 +8,7 @@ class Api::V1::Merchants::SearchController < BaseController
   end
 
   private
+  
     def merchant_params_error_response(exception)
       render json: ErrorSerializer.new(exception).serialize, status: :bad_request
     end

@@ -1,5 +1,5 @@
 class MerchantParamsError < StandardError
   def message
-    "Can only pass name as a parameter"
+    "Invalid parameter passed. Valid parameters: name"
   end
 end
