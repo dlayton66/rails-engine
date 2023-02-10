@@ -28,10 +28,10 @@ class Merchant < ApplicationRecord
   end
 
   def self.other_params?(params)
-    (params.keys - supported_params).any?
+    (params.keys - valid_params).any?
   end
 
-  def self.supported_params
+  def self.valid_params
     ["name"]
   end
 end

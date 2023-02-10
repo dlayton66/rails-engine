@@ -9,6 +9,7 @@ class Item < ApplicationRecord
   def self.get_items_by_page(params)
     page = params.fetch(:page, 1).to_i
     per_page = params.fetch(:per_page, 20).to_i
+
     offset((page-1)*per_page).limit(per_page)
   end
 
@@ -23,7 +24,9 @@ class Item < ApplicationRecord
     else
       items = search_by_price(params[:min_price], params[:max_price])
     end
+
     raise ItemNotFoundError if items.empty?
+
     items
   end
 
@@ -34,6 +37,7 @@ class Item < ApplicationRecord
   def self.search_by_price(min_price = nil, max_price = nil)
     min_price ||= 0
     max_price ||= Item.maximum(:unit_price)
+
     where(unit_price: min_price.to_f..max_price.to_f)
   end
 
@@ -61,11 +65,11 @@ class Item < ApplicationRecord
   end
 
   def self.other_params?(params)
-    (params.keys - supported_params).any?
+    (params.keys - valid_params).any?
   end
 
   def self.empty_params?(params)
-    passed_valid_params = params.keys & supported_params
+    passed_valid_params = params.keys & valid_params
     passed_valid_params.any? do |key|
       params[key].empty?
     end
@@ -75,7 +79,7 @@ class Item < ApplicationRecord
     params[:name] && (params[:min_price] || params[:max_price])
   end
 
-  def self.supported_params
+  def self.valid_params
     ["name", "min_price", "max_price"]
   end
 end

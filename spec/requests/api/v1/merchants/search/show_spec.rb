@@ -94,7 +94,7 @@ RSpec.describe 'find merchant' do
       expect(error_response[:errors][0]).to eq("Parameters cannot be empty")
     end
 
-    it 'returns error if only unsupported parameter is passed' do
+    it 'returns error if only invalid parameter is passed' do
       get '/api/v1/merchants/find?min_price=50'
   
       expect(response.status).to eq(400)
@@ -110,7 +110,7 @@ RSpec.describe 'find merchant' do
       expect(error_response[:errors][0]).to eq("Invalid parameter passed. Valid parameters: name")
     end
 
-    it 'returns error if any unsupported parameter is passed' do
+    it 'returns error if any invalid parameter is passed' do
       get '/api/v1/merchants/find?name=Mart&min_price=50'
   
       expect(response.status).to eq(400)

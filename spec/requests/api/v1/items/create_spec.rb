@@ -76,7 +76,7 @@ RSpec.describe 'create item' do
     expect(error_response[:errors]).to include("Merchant must exist", "Unit price can't be blank")
   end
 
-  it 'ignores unsupported attributes' do
+  it 'ignores invalid attributes' do
     extra_params = {
                     name: "Sunglasses",
                     description: "Make you look cool",

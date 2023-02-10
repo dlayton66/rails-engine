@@ -243,7 +243,7 @@ RSpec.describe 'find all items' do
       expect(error_response[:errors][0]).to eq("Parameters cannot be empty")
     end
 
-    it 'returns error if only unsupported parameter is passed' do
+    it 'returns error if only invalid parameter is passed' do
       get '/api/v1/items/find_all?description=big'
 
       expect(response.status).to eq(400)
@@ -259,7 +259,7 @@ RSpec.describe 'find all items' do
       expect(error_response[:errors][0]).to eq("Invalid parameter passed. Valid parameters: name, min_price, max_price")
     end
 
-    it 'returns error if any unsupported parameter is passed' do
+    it 'returns error if any invalid parameter is passed' do
       get '/api/v1/items/find_all?name=ring&description=big'
 
       expect(response.status).to eq(400)
@@ -275,7 +275,7 @@ RSpec.describe 'find all items' do
       expect(error_response[:errors][0]).to eq("Invalid parameter passed. Valid parameters: name, min_price, max_price")
     end
 
-    it 'returns error if supported parameters are mixed' do
+    it 'returns error if valid parameters are mixed' do
       get '/api/v1/items/find_all?name=ring&max_price=70'
 
       expect(response.status).to eq(400)
