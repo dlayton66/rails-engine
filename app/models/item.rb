@@ -6,6 +6,12 @@ class Item < ApplicationRecord
   validates :description, presence: true
   validates :unit_price, presence: true
 
+  def self.get_items_by_page(params)
+    page = params.fetch(:page, 1).to_i
+    per_page = params.fetch(:per_page, 20).to_i
+    offset((page-1)*per_page).limit(per_page)
+  end
+
   def self.search_all(params)
     check_params(passed_params(params))
     find_all_items(params)
