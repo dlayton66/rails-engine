@@ -6,11 +6,19 @@ RSpec.describe InvoiceItem, type: :model do
     it { should belong_to(:item) }
   end
 
-  describe 'instance methods' do
+  describe 'callbacks' do
     describe '.check_invoice' do
       it 'is triggered before destroy' do
         invoice_item = create(:invoice_item)
         expect(invoice_item).to receive(:check_invoice)
+        invoice_item.destroy
+      end
+    end
+
+    describe '.destroy_invoice' do
+      it 'is triggered after destroy' do
+        invoice_item = create(:invoice_item)
+        expect(invoice_item).to receive(:destroy_invoice)
         invoice_item.destroy
       end
 
