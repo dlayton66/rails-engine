@@ -93,5 +93,50 @@ RSpec.describe 'get all items' do
         expect(item[:attributes][:merchant_id]).to eq(database_items[i].merchant_id)
       end
     end
+
+    it 'allows user to specify a page' do
+      get '/api/v1/items?page=2'
+
+      expect(response).to be_successful
+
+      json_response = JSON.parse(response.body, symbolize_names: true)
+      items = json_response[:data]
+
+      items.each.with_index do |item, i|
+        expect(item[:id]).to eq(database_items[i+20].id.to_s)
+        expect(item[:attributes][:name]).to eq(database_items[i+20].name)
+        expect(item[:attributes][:description]).to eq(database_items[i+20].description)
+        expect(item[:attributes][:unit_price]).to eq(database_items[i+20].unit_price)
+        expect(item[:attributes][:merchant_id]).to eq(database_items[i+20].merchant_id)
+      end
+    end
+
+    it 'allows user to specify items per page' do
+      get '/api/v1/items?per_page=15'
+
+      expect(response).to be_successful
+
+      json_response = JSON.parse(response.body, symbolize_names: true)
+      items = json_response[:data]
+
+      expect(items.count).to eq(15)
+    end
+
+    it 'allows user to specify a page and items per page' do
+      get '/api/v1/items?page=3&per_page=15'
+
+      expect(response).to be_successful
+
+      json_response = JSON.parse(response.body, symbolize_names: true)
+      items = json_response[:data]
+
+      items.each.with_index do |item, i|
+        expect(item[:id]).to eq(database_items[i+30].id.to_s)
+        expect(item[:attributes][:name]).to eq(database_items[i+30].name)
+        expect(item[:attributes][:description]).to eq(database_items[i+30].description)
+        expect(item[:attributes][:unit_price]).to eq(database_items[i+30].unit_price)
+        expect(item[:attributes][:merchant_id]).to eq(database_items[i+30].merchant_id)
+      end
+    end
   end
 end
